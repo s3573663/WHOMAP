@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<!-- WHOMAP, Group 4, COSC2650 Programming Project 1 -->
+
+<html>
+    <head>
+        <title>WHOMAP</title>
+        
+        <meta charset="utf-8">
+        <meta name="application-name" content="WHOMAP"/>
+        <meta name="description" content="Visualisation of hot spots 
+                                          from IoT Air Pollution Data"/>
+        <meta name="author" content="Group 4"/>
+        <meta name="progma" content="no-cache"/>
+        <meta name="viewport" content="initial-scale=0.8, user-scalable=no"/>
+        
+        <!-- stylesheet -->
+        <link rel="stylesheet" href="index.css" type="text/css"/>
+    </head>
+    
+    <body onload="start()" onresize="resize()">
+        
+        <!-- hide page until loaded -->
+        <div id="hide"></div>
+        
+        <!-- firebase sdk -->
+        <script 
+        src="https://www.gstatic.com/firebasejs/7.2.1/firebase-app.js">
+        </script>
+        <!-- firebase database -->
+        <script 
+        src="https://www.gstatic.com/firebasejs/7.2.1/firebase-database.js">
+        </script>
+        <!-- firebase configuration and initialisation-->
+        <script>
+            var firebaseConfig = {
+                apiKey: "AIzaSyCexsY4VUilRZb0xPMToUT4-BqfmgKymFU",
+                authDomain: "getpop-47dd7.firebaseapp.com",
+                databaseURL: "https://getpop-47dd7.firebaseio.com",
+                projectId: "getpop-47dd7",
+                storageBucket: "getpop-47dd7.appspot.com",
+                messagingSenderId: "793835709008",
+                appId: "1:793835709008:web:3d3b5c64de8edf9b3fa755"
+            };
+            firebase.initializeApp(firebaseConfig);
+        </script>
+        
+        <!-- whomap javascript -->
+        <script src="index.js"></script>
+        
+        <!-- grabzit -->
+        <script src="grabzit.min.js"></script>
+        
+        <!-- loading transparency and animation -->
+        <div id="transparency" style="display:none">
+            <div class="loader"></div>
+        </div>
+        
+        <!-- about us -->
+        <div id="about" class="popup" style="display:none">
+            <div class="popup-bar">
+                <div id="about-title" class="popup-title">
+                    <b>WHO</b><em>map</em>
+                </div>
+                <button class="popup-close" onclick="hideAbout()">X</button>
+            </div>
+            <div class="popup-content">
+                <p class="popup-body">
+                    Providing an up-to-date visualisation of hot spots
+                    from IoT Air Pollution Data.
+                </p>
+                <p class="popup-body">
+                    <b>POWERED BY:</b>
+                </p>
+                <p class="popup-body">
+                    <a href="https://www.google.com/maps" target="_blank">
+                    Google Maps</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://firebase.google.com/" target="_blank">
+                    Google Firebase</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://www.waqi.info/" target="_blank">
+                    World Air Quality Index</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://www.epa.gov/" target="_blank">
+                    USEPA (data source for WAQI)</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://openaq.org/" target="_blank">
+                    OpenAQ</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://grabz.it/" target="_blank">
+                    GrabzIt</a>
+                </p>
+                <p class="popup-body">
+                    <a href="https://formspree.io/" target="_blank">
+                    Formspree</a>
+                </p>
+                <button id="contact-button" class="popup-button"
+                        onclick="showContact()">
+                    Contact Us
+                </button>
+                <button id="donate-button" class="popup-button"
+                        onclick="donate()">
+                    Donate with PayPal
+                </button>
+            </div>
+        </div>
+        
+        <!-- contact us -->
+        <div id="contact" class="popup" style="display:none">
+            <div class="popup-bar">
+                <div id="contact-title" class="popup-title">
+                    <b>WHO</b><em>map</em>
+                </div>
+                <button class="popup-close" onclick="hideContact()">X</button>
+            </div>
+            <div class="popup-content">
+                <form action="https://formspree.io/xayyweqb" method="POST">
+                    <input type="text" name="name" id="contact-name"
+                           placeholder="Name" required="">
+                    <input type="email" name="_replyto" id="contact-email"
+                           placeholder="Email" required="">
+                    <textarea name="message" id="contact-message"
+                              placeholder="Message" required=""></textarea>
+                    <input type="hidden" name="_subject"
+                           id="email-subject" value="Contact Form Submission">
+                    <input type="hidden" name="_next"
+                           value="https://cosc2650-heatmap.azurewebsites.net/
+                                  whomap.html"/>
+                    <input type="submit" value="Send Message"
+                           id="contact-submit-button" class="popup-button">
+                </form>
+            </div>
+        </div>
+        
+        <!-- area to be saved as an image -->
+        <div id="save-area" style="display:none"></div>
+        
+        <!-- top title/nav bar-->
+        <div id="top-bar">
+            <a id="logo"><b>WHO</b><em>map</em></a>
+            <img title="About" src="icon-about.png"
+                 alt="AB" onclick="showAbout()">
+            <img title="My Location" src="icon-location.png"
+                 alt="LO" onclick="showMyLocation()">
+            <img title="Refresh Map" src="icon-refresh.png"
+                 alt="RE" onclick="showData()">
+            <img title="Save Map" src="icon-save.png"
+                 alt="SA" onclick="saveMap()">
+            <img title="Copy URL" src="icon-link.png"
+                 alt="LI" onclick="copyLink(true)">
+            <img title="Share URL on Twitter" src="icon-twitter.png"
+                 alt="TW" onclick="twitter()">
+            <img title="Share URL on Facebook" src="icon-facebook.png"
+                 alt="FA" onclick="facebook()">
+        </div>
+        
+        <!-- map controls -->
+        <div id="map-controls" class="controls">
+            <p><b>Data</b></p>
+            <button id="data0" onclick="showData(0)">Air Quality Index</button>
+            <button id="data1" onclick="showData(1)">Small Particles</button>
+            <button id="data2" onclick="showData(2)">Large Particles</button>
+            <button id="data3" onclick="showData(3)">Ozone</button>
+            <button id="data4" onclick="showData(4)">Nitrogen Dioxide</button>
+            <button id="data5" onclick="showData(5)">Sulfur Dioxide</button>
+            <button id="data6" onclick="showData(6)">Carbon Monoxide</button>
+        </div>
+        
+        <!-- map -->
+        <div id="map"></div>
+        
+        <!-- map legend -->
+        <div id="legend">
+            <p id="legend-max">500</p>
+            <div id="layer-gradient"></div>
+            <p>0</p>
+            <img src="icon-opacity.png" alt="G" onclick="changeOpacity()">
+            <img src="icon-gradient.png" alt="O" onclick="changeGradient()">
+        </div>
+        
+        <!-- marker -->
+        <div id="marker" style="display:none">
+            <div id="marker-bar">
+                <div id="marker-title"></div>
+                <button id="marker-close"
+                        onclick='hideMarker("marker")'>X</button>
+            </div>
+            <div id="marker-content"></div>
+        </div>
+        
+        <footer>
+            <p>Copyright WHOMAP (2019), all rights reserved.</p>
+            <!-- Authors: Aaron Bramich (s3573663),
+                          Brendan O'Keefe (s3571684),
+                          Jenna Betts (s3572261),
+                          Joel Rehfeldt (s3611544),
+                          Scott Price (s3753070). -->
+        </footer>
+    </body>
+</html>
