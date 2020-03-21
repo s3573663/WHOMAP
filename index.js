@@ -74,17 +74,6 @@ var apiCalls = [
     "https://api.openaq.org/v1/latest?parameter=co&has_geo=true&limit=10000"
 ];
 
-// center element on screen by id and size
-function centerElement(elementID, elementWidth, elementHeight) {
-    "use strict";
-    
-    var Xpos = (window.innerWidth - elementWidth) / 2,
-        Ypos = (window.innerHeight - elementHeight) / 2;
-    
-    document.getElementById(elementID).style.left = Xpos + "px";
-    document.getElementById(elementID).style.top = Ypos + "px";
-}
-
 // show block element by id
 function showElement(elementID) {
     "use strict";
@@ -97,6 +86,28 @@ function hideElement(elementID) {
     "use strict";
     
     document.getElementById(elementID).style.display = "none";
+}
+
+// button - show about/contact/donate popup
+function showAbout() {
+    "use strict";
+    
+    showElement("transparency");
+    showElement("about");
+}
+
+// button - show contact us popup
+function showContact() {
+    "use strict";
+    
+    showElement("contact");
+}
+
+// button - hide contact us popup
+function hideContact() {
+    "use strict";
+    
+    hideElement("contact");
 }
 
 // hide map marker
@@ -280,6 +291,7 @@ function waqiAPI(call) {
                     });
                 }
             }
+            
         } else {
             // FOR DEBUG ONLY: display error status of API call
             console.log("waqi: " + data.error);
@@ -706,10 +718,22 @@ function refreshHeatmap() {
 function validateData() {
     "use strict";
     
-    if (heatmap.data.g.length > 0) {
+    if (heatmap.data.g === undefined) {
+        alert("failed to connect to data source");
+        clearInterval(interval);
+        showAbout();
+    } else if (heatmap.data.g.length > 0) {
         clearInterval(interval);
         refreshHeatmap();
     }
+}
+
+// button - hide about/contact/donate popup
+function hideAbout() {
+    "use strict";
+    
+    hideElement("about");
+    interval = setInterval(function () { validateData(); }, 100);
 }
 
 // move map to current location
@@ -898,36 +922,6 @@ function changeOpacity() {
     "use strict";
     
     heatmap.set('opacity', heatmap.get('opacity') ? null : 0.3);
-}
-
-// button - show about/contact/donate popup
-function showAbout() {
-    "use strict";
-    
-    showElement("transparency");
-    showElement("about");
-}
-
-// button - hide about/contact/donate popup
-function hideAbout() {
-    "use strict";
-    
-    hideElement("about");
-    interval = setInterval(function () { validateData(); }, 100);
-}
-
-// button - show contact us popup
-function showContact() {
-    "use strict";
-    
-    showElement("contact");
-}
-
-// button - hide contact us popup
-function hideContact() {
-    "use strict";
-    
-    hideElement("contact");
 }
 
 // button - donate to the cause via paypal
