@@ -85,14 +85,6 @@ function centerElement(elementID, elementWidth, elementHeight) {
     document.getElementById(elementID).style.top = Ypos + "px";
 }
 
-// center popups on resize
-function resize() {
-    "use strict";
-    
-    centerElement('about', 252, 352);
-    centerElement('contact', 342, 352);
-}
-
 // show block element by id
 function showElement(elementID) {
     "use strict";
@@ -912,7 +904,6 @@ function changeOpacity() {
 function showAbout() {
     "use strict";
     
-    resize();
     showElement("transparency");
     showElement("about");
 }
@@ -929,7 +920,6 @@ function hideAbout() {
 function showContact() {
     "use strict";
     
-    resize();
     showElement("contact");
 }
 
