@@ -799,12 +799,11 @@ function twitter() {
     // open new tab for Twitter and append site url, data, summary and tags
     window.open("https://twitter.com/intent/tweet?" +
                 "url=https://s3573663.github.io/WHOMAP/" +
-                "%2Fwhomap.html" +
                 "?latitude=" + latitude +
-                "longitude=" + longitude +
-                "zoom=" + zoom +
-                "gradient=" + gradient +
-                "source=" + source +
+                "&longitude=" + longitude +
+                "&zoom=" + zoom +
+                "&gradient=" + gradient +
+                "&source=" + source +
                 "&text=A%20useful%20application%20for%20" +
                 "showing%20air%20quality%20data" +
                 "&hashtags=heatmap,WHOmap,airquality,IoT");
