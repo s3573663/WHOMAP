@@ -65,7 +65,7 @@ function getDate() {
 // array of api calls for heatmap layer
 var apiCalls = [
     "https://api.waqi.info/map/bounds/?latlng=-90,-180,90,180" +
-        "&token=525ac769cbf165f709ab012ea50dfaaf4cd3d6ca",
+        "&token=c762bd0d8639828c66e77d63c10b6f60ff0cf2de",
     "https://api.openaq.org/v1/latest?parameter=pm25&has_geo=true&limit=10000",
     "https://api.openaq.org/v1/latest?parameter=pm10&has_geo=true&limit=10000",
     "https://api.openaq.org/v1/latest?parameter=o3&has_geo=true&limit=10000",
@@ -423,7 +423,7 @@ function markerData(pollutionData, lat, lng) {
     
     var request = new XMLHttpRequest(), call =
         "https://api.waqi.info/feed/geo:" + lat + ";" + lng +
-        "/?token=525ac769cbf165f709ab012ea50dfaaf4cd3d6ca";
+        "/?token=c762bd0d8639828c66e77d63c10b6f60ff0cf2de";
 
     // send api request
     request.open('GET', call);
@@ -784,7 +784,7 @@ function facebook() {
     
     // open new tab for Facebook and append site url and data
     window.open("https://www.facebook.com/sharer.php?" +
-                "u=https://cosc2650-heatmap.azurewebsites.net/whomap.html" +
+                "u=https://s3573663.github.io/WHOMAP/" +
                 "?latitude=" + latitude +
                 "&longitude=" + longitude +
                 "&zoom=" + zoom +
@@ -798,7 +798,7 @@ function twitter() {
     
     // open new tab for Twitter and append site url, data, summary and tags
     window.open("https://twitter.com/intent/tweet?" +
-                "url=https%3A%2F%2Fcosc2650-heatmap.azurewebsites.net" +
+                "url=https://s3573663.github.io/WHOMAP/" +
                 "%2Fwhomap.html" +
                 "?latitude=" + latitude +
                 "longitude=" + longitude +
@@ -816,7 +816,7 @@ function copyLink(showAlert) {
     
     var link, textArea;
     
-    link = "https://cosc2650-heatmap.azurewebsites.net/whomap.html" +
+    link = "https://s3573663.github.io/WHOMAP/" +
         "?latitude=" + latitude +
         "&longitude=" + longitude +
         "&zoom=" + zoom +
